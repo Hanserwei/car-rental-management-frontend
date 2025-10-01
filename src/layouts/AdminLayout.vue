@@ -15,6 +15,8 @@ import {
   AppstoreOutlined,
   EnvironmentOutlined,
   CommentOutlined,
+  ReadOutlined,
+  QuestionCircleOutlined,
   SafetyOutlined,
   ApartmentOutlined,
 } from '@ant-design/icons-vue'
@@ -96,6 +98,20 @@ const allMenus: MenuItem[] = [
     label: '社区管理',
     icon: CommentOutlined,
     permissionCode: 'community:menu',
+    children: [
+      {
+        key: '/admin/community/posts',
+        label: '帖子管理',
+        icon: ReadOutlined,
+        permissionCode: 'community:post:list',
+      },
+      {
+        key: '/admin/community/questions',
+        label: '问答管理',
+        icon: QuestionCircleOutlined,
+        permissionCode: 'community:question:list',
+      },
+    ],
   },
   {
     key: '/admin/system',
@@ -233,12 +249,16 @@ router.afterEach((to) => {
   // 自动展开包含当前路由的父菜单
   if (to.path.startsWith('/admin/system/')) {
     openKeys.value = ['/admin/system']
+  } else if (to.path.startsWith('/admin/community/')) {
+    openKeys.value = ['/admin/community']
   }
 })
 
 // 初始化时设置展开的菜单
 if (route.path.startsWith('/admin/system/')) {
   openKeys.value = ['/admin/system']
+} else if (route.path.startsWith('/admin/community/')) {
+  openKeys.value = ['/admin/community']
 }
 </script>
 

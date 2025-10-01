@@ -68,8 +68,20 @@ const router = createRouter({
         {
           path: 'community',
           name: 'community',
-          component: () => import('@/views/admin/CommunityManagement.vue'),
+          redirect: '/admin/community/posts',
           meta: { requiresAuth: true, title: '社区管理' },
+        },
+        {
+          path: 'community/posts',
+          name: 'communityPosts',
+          component: () => import('@/views/admin/CommunityManagement.vue'),
+          meta: { requiresAuth: true, title: '帖子管理' },
+        },
+        {
+          path: 'community/questions',
+          name: 'communityQuestions',
+          component: () => import('@/views/admin/CommunityManagement.vue'),
+          meta: { requiresAuth: true, title: '问答管理' },
         },
         {
           path: 'system/users',
