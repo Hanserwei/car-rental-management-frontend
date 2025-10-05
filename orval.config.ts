@@ -14,7 +14,7 @@ export default defineConfig({
       workspace: 'src/api-client', // 基础目录
       mode: 'tags-split', // 按 tags 拆分文件
       client: 'axios', // 使用 axios 作为请求库
-      clean: true, // 每次生成前清空目录
+      clean: false, // 每次生成前清空目录
       mock: false, // 是否生成 mock
       override: {
         mutator: {

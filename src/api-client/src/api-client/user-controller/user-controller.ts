@@ -9,6 +9,8 @@ import type {
   ApiResponseVerificationCodeVO,
   ApiResponseVoid,
   GetVerificationCodeParams,
+  UserEmailLoginCodeRequest,
+  UserEmailLoginRequest,
   UserLoginRequest,
   UserRegisterRequest,
 } from '.././models'
@@ -39,6 +41,28 @@ export const getUserController = () => {
     })
   }
   /**
+   * 发送邮箱登录验证码
+   */
+  const sendEmailLoginCode = (userEmailLoginCodeRequest: UserEmailLoginCodeRequest) => {
+    return axiosInstance<ApiResponseVoid>({
+      url: `/sys_user/login/email-code`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: userEmailLoginCodeRequest,
+    })
+  }
+  /**
+   * 用户邮箱验证码登录接口
+   */
+  const userLoginByEmail = (userEmailLoginRequest: UserEmailLoginRequest) => {
+    return axiosInstance<ApiResponseUserVO>({
+      url: `/sys_user/login/email`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: userEmailLoginRequest,
+    })
+  }
+  /**
    * 用户登出接口
    */
   const logout = () => {
@@ -54,13 +78,26 @@ export const getUserController = () => {
       params,
     })
   }
-  return { userRegister, userLogin, logout, getVerificationCode }
+  return {
+    userRegister,
+    userLogin,
+    sendEmailLoginCode,
+    userLoginByEmail,
+    logout,
+    getVerificationCode,
+  }
 }
 export type UserRegisterResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getUserController>['userRegister']>>
 >
 export type UserLoginResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getUserController>['userLogin']>>
+>
+export type SendEmailLoginCodeResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getUserController>['sendEmailLoginCode']>>
+>
+export type UserLoginByEmailResult = NonNullable<
+  Awaited<ReturnType<ReturnType<typeof getUserController>['userLoginByEmail']>>
 >
 export type LogoutResult = NonNullable<
   Awaited<ReturnType<ReturnType<typeof getUserController>['logout']>>
