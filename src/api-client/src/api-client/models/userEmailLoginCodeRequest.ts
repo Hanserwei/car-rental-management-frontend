@@ -8,10 +8,9 @@
 export interface UserEmailLoginCodeRequest {
   /**
    * 接收验证码的邮箱地址
+   * @minLength 1
    */
   email: string
-  /**
-   * 用户类型，1为管理员，2为普通用户
-   */
-  userType?: string
+  /** 用户类型，1为管理员，2为普通用户 */
+  userType: string
 }
