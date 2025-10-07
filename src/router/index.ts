@@ -6,9 +6,46 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('@/views/HomeView.vue'),
+      component: () => import('@/layouts/PortalLayout.vue'),
       meta: { requiresAuth: false },
+      children: [
+        {
+          path: '',
+          name: 'portalCarsHome',
+          component: () => import('@/views/portal/CarMarketView.vue'),
+          meta: { requiresAuth: false, title: '租车服务' },
+        },
+        {
+          path: 'cars',
+          name: 'portalCars',
+          component: () => import('@/views/portal/CarMarketView.vue'),
+          meta: { requiresAuth: false, title: '租车服务' },
+        },
+        {
+          path: 'cars/:id',
+          name: 'portalCarDetail',
+          component: () => import('@/views/portal/CarDetailView.vue'),
+          meta: { requiresAuth: false, title: '车辆详情' },
+        },
+        {
+          path: 'news',
+          name: 'portalNews',
+          component: () => import('@/views/portal/NewsListView.vue'),
+          meta: { requiresAuth: false, title: '新闻资讯' },
+        },
+        {
+          path: 'news/:id',
+          name: 'portalNewsDetail',
+          component: () => import('@/views/portal/NewsDetailView.vue'),
+          meta: { requiresAuth: false, title: '新闻详情' },
+        },
+        {
+          path: 'orders',
+          name: 'portalOrders',
+          component: () => import('@/views/portal/MyOrdersView.vue'),
+          meta: { requiresAuth: true, title: '我的订单' },
+        },
+      ],
     },
     {
       path: '/login',
@@ -82,6 +119,12 @@ const router = createRouter({
           name: 'communityQuestions',
           component: () => import('@/views/admin/CommunityManagement.vue'),
           meta: { requiresAuth: true, title: '问答管理' },
+        },
+        {
+          path: 'content/news',
+          name: 'contentNews',
+          component: () => import('@/views/admin/content/NewsManagement.vue'),
+          meta: { requiresAuth: true, title: '新闻管理' },
         },
         {
           path: 'system/users',

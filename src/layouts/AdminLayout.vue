@@ -114,6 +114,12 @@ const allMenus: MenuItem[] = [
     ],
   },
   {
+    key: '/admin/content/news',
+    label: '新闻管理',
+    icon: ReadOutlined,
+    permissionCode: 'content:news:list',
+  },
+  {
     key: '/admin/system',
     label: '系统管理',
     icon: SettingOutlined,

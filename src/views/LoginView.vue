@@ -126,8 +126,8 @@ const handlePasswordLogin = async () => {
         // 管理员跳转到后台管理（默认跳转到系统首页）
         await router.push('/admin/dashboard')
       } else {
-        // 普通用户跳转到首页
-        await router.push('/')
+        // 普通用户跳转到租车页面
+        await router.push('/cars')
       }
     } else {
       message.error(response.message || '登录失败')
@@ -170,7 +170,7 @@ const handleSendEmailCode = async () => {
     sendingEmailCode.value = true
     const payload: UserEmailLoginCodeRequest = {
       email: emailFormState.email,
-      userType: emailFormState.userType,
+      userType: emailFormState.userType ?? '2',
     }
     const response = await userController.sendEmailLoginCode(payload)
     if (response.code === 200) {
@@ -189,14 +189,18 @@ const handleSendEmailCode = async () => {
 const handleEmailLogin = async () => {
   try {
     emailLoading.value = true
-    const response = await userController.userLoginByEmail(emailFormState)
+    const loginPayload: UserEmailLoginRequest = {
+      ...emailFormState,
+      userType: emailFormState.userType ?? '2',
+    }
+    const response = await userController.userLoginByEmail(loginPayload)
     if (response.code === 200 && response.data) {
       message.success('登录成功')
       userStore.setUserInfo(response.data)
       if (response.data.userType === '1') {
         await router.push('/admin/dashboard')
       } else {
-        await router.push('/')
+        await router.push('/cars')
       }
     } else {
       message.error(response.message || '登录失败')
