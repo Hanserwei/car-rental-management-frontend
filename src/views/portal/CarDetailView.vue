@@ -156,7 +156,9 @@ onMounted(async () => {
         <a-col :xs="24" :lg="14">
           <div class="gallery-card">
             <img
-              :src="car.coverImage || 'https://cdn.jsdelivr.net/gh/napthedev/placeholder/car-rental.png'"
+              :src="
+                car.coverImage || 'https://cdn.jsdelivr.net/gh/napthedev/placeholder/car-rental.png'
+              "
               :alt="car.carName"
             />
           </div>
@@ -287,16 +289,10 @@ onMounted(async () => {
         </a-col>
       </a-row>
       <a-form-item label="取车地点">
-        <a-input
-          v-model:value="bookingForm.pickupLocation"
-          placeholder="请输入详细取车地址"
-        />
+        <a-input v-model:value="bookingForm.pickupLocation" placeholder="请输入详细取车地址" />
       </a-form-item>
       <a-form-item label="还车地点 (可选)">
-        <a-input
-          v-model:value="bookingForm.returnLocation"
-          placeholder="默认与取车地点一致"
-        />
+        <a-input v-model:value="bookingForm.returnLocation" placeholder="默认与取车地点一致" />
       </a-form-item>
       <a-alert
         v-if="rentalDays > 0 && car?.dailyPrice"
@@ -360,8 +356,10 @@ onMounted(async () => {
 
 .feature-item {
   padding: 12px;
-  border-radius: 10px;
-  background: rgba(230, 247, 255, 0.6);
+  border-radius: 12px;
+  background: linear-gradient(145deg, #ffffff 0%, #f0f7ff 100%);
+  border: 1px solid rgba(24, 144, 255, 0.1);
+  box-shadow: 0 6px 16px rgba(24, 144, 255, 0.08);
 }
 
 .feature-item .label {

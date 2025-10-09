@@ -15,6 +15,12 @@ const isAdmin = computed(() => userStore.isAdmin)
 const userInfo = computed(() => userStore.userInfo)
 
 const activeMenuKey = computed(() => {
+  if (route.path.startsWith('/community/posts')) {
+    return '/community/posts'
+  }
+  if (route.path.startsWith('/community/questions')) {
+    return '/community/questions'
+  }
   if (route.path.startsWith('/orders')) {
     return '/orders'
   }
@@ -72,6 +78,8 @@ const goToRegister = () => {
       >
         <a-menu-item key="/">租车服务</a-menu-item>
         <a-menu-item key="/news">新闻资讯</a-menu-item>
+        <a-menu-item key="/community/posts">社区广场</a-menu-item>
+        <a-menu-item key="/community/questions">问答专区</a-menu-item>
         <a-menu-item key="/orders">我的订单</a-menu-item>
       </a-menu>
       <div class="action-area">

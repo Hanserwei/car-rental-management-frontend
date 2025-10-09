@@ -137,6 +137,104 @@ export interface PortalNewsItem {
   viewCount?: number | string
 }
 
+export interface PortalForumPostQuery {
+  keyword?: string
+  mine?: boolean
+  status?: number
+  current?: number
+  pageSize?: number
+  sortField?: string
+  sortOrder?: string
+}
+
+export interface PortalForumPostPayload {
+  title: string
+  content: string
+  coverImage?: string | null
+  submit?: boolean
+}
+
+export interface PortalForumReplyPayload {
+  content: string
+  parentReplyId?: number
+}
+
+export interface PortalForumReplyVO {
+  id?: number
+  postId?: number
+  userId?: number
+  userName?: string
+  content?: string
+  status?: number
+  createdAt?: string
+}
+
+export interface PortalForumPostVO {
+  id?: number
+  title?: string
+  status?: number
+  coverImage?: string
+  viewCount?: number
+  likeCount?: number
+  commentCount?: number
+  userId?: number
+  userName?: string
+  lastReplyTime?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface PortalForumPostDetailVO extends PortalForumPostVO {
+  content?: string
+  replies?: PortalForumReplyVO[]
+}
+
+export interface PortalQaQuestionQuery {
+  keyword?: string
+  mine?: boolean
+  status?: number
+  current?: number
+  pageSize?: number
+  sortField?: string
+  sortOrder?: string
+}
+
+export interface PortalQaQuestionPayload {
+  title: string
+  content: string
+}
+
+export interface PortalQaAnswerPayload {
+  content: string
+}
+
+export interface PortalQaAnswerVO {
+  id?: number
+  questionId?: number
+  userId?: number
+  userName?: string
+  content?: string
+  isAccepted?: number
+  status?: number
+  createdAt?: string
+}
+
+export interface PortalQaQuestionVO {
+  id?: number
+  title?: string
+  status?: number
+  answerCount?: number
+  userId?: number
+  userName?: string
+  lastAnswerTime?: string
+  createdAt?: string
+}
+
+export interface PortalQaQuestionDetailVO extends PortalQaQuestionVO {
+  content?: string
+  answers?: PortalQaAnswerVO[]
+}
+
 const request = <T>(config: AxiosRequestConfig) => axiosInstance<ApiResponse<T>>(config)
 
 export const portalMetaApi = {
@@ -183,4 +281,61 @@ export const portalNewsApi = {
   pageNews: (params: PortalNewsQuery) =>
     request<PageResult<PortalNewsItem>>({ url: '/portal/news', method: 'GET', params }),
   getNews: (newsId: number) => request<PortalNewsItem>({ url: `/portal/news/${newsId}`, method: 'GET' }),
+}
+
+export const portalCommunityApi = {
+  pagePosts: (params: PortalForumPostQuery) =>
+    request<PageResult<PortalForumPostVO>>({ url: '/portal/community/posts', method: 'GET', params }),
+  getPost: (postId: number) =>
+    request<PortalForumPostDetailVO>({ url: `/portal/community/posts/${postId}`, method: 'GET' }),
+  createPost: (payload: PortalForumPostPayload) =>
+    request<PortalForumPostVO>({
+      url: '/portal/community/posts',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: payload,
+    }),
+  updatePost: (postId: number, payload: PortalForumPostPayload) =>
+    request<PortalForumPostVO>({
+      url: `/portal/community/posts/${postId}`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: payload,
+    }),
+  deletePost: (postId: number) => request<void>({ url: `/portal/community/posts/${postId}`, method: 'DELETE' }),
+  replyPost: (postId: number, payload: PortalForumReplyPayload) =>
+    request<PortalForumReplyVO>({
+      url: `/portal/community/posts/${postId}/replies`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: payload,
+    }),
+  pageQuestions: (params: PortalQaQuestionQuery) =>
+    request<PageResult<PortalQaQuestionVO>>({ url: '/portal/community/questions', method: 'GET', params }),
+  getQuestion: (questionId: number) =>
+    request<PortalQaQuestionDetailVO>({
+      url: `/portal/community/questions/${questionId}`,
+      method: 'GET',
+    }),
+  createQuestion: (payload: PortalQaQuestionPayload) =>
+    request<PortalQaQuestionVO>({
+      url: '/portal/community/questions',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: payload,
+    }),
+  answerQuestion: (questionId: number, payload: PortalQaAnswerPayload) =>
+    request<PortalQaAnswerVO>({
+      url: `/portal/community/questions/${questionId}/answers`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: payload,
+    }),
+  acceptAnswer: (questionId: number, answerId: number) =>
+    request<void>({
+      url: `/portal/community/questions/${questionId}/answers/${answerId}/accept`,
+      method: 'POST',
+    }),
+  closeQuestion: (questionId: number) =>
+    request<void>({ url: `/portal/community/questions/${questionId}`, method: 'DELETE' }),
 }

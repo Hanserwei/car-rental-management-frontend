@@ -40,6 +40,30 @@ const router = createRouter({
           meta: { requiresAuth: false, title: '新闻详情' },
         },
         {
+          path: 'community/posts',
+          name: 'portalCommunityPosts',
+          component: () => import('@/views/portal/community/CommunityPostListView.vue'),
+          meta: { requiresAuth: false, title: '社区帖子' },
+        },
+        {
+          path: 'community/posts/:id',
+          name: 'portalCommunityPostDetail',
+          component: () => import('@/views/portal/community/CommunityPostDetailView.vue'),
+          meta: { requiresAuth: false, title: '帖子详情' },
+        },
+        {
+          path: 'community/questions',
+          name: 'portalCommunityQuestions',
+          component: () => import('@/views/portal/community/CommunityQuestionListView.vue'),
+          meta: { requiresAuth: false, title: '问答社区' },
+        },
+        {
+          path: 'community/questions/:id',
+          name: 'portalCommunityQuestionDetail',
+          component: () => import('@/views/portal/community/CommunityQuestionDetailView.vue'),
+          meta: { requiresAuth: false, title: '问题详情' },
+        },
+        {
           path: 'orders',
           name: 'portalOrders',
           component: () => import('@/views/portal/MyOrdersView.vue'),
