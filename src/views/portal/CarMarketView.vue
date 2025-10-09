@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import type { CarInfoVO } from '@/api/car-info'
 import {
@@ -179,14 +178,6 @@ const displayPrice = (price?: number) => {
   return `¥${price.toFixed(0)} / 天`
 }
 
-const goNews = (newsId?: number | string) => {
-  if (!newsId) {
-    router.push('/news')
-    return
-  }
-  router.push(`/news/${newsId}`)
-}
-
 onMounted(async () => {
   await Promise.all([fetchMeta(), fetchCars(), fetchTopNews()])
 })
@@ -316,27 +307,6 @@ onMounted(async () => {
       </a-form>
     </a-card>
 
-    <section v-if="topNews.length" class="news-preview">
-      <div class="news-header">
-        <h2>最新资讯</h2>
-        <a-button type="link" @click="() => router.push('/news')">查看更多</a-button>
-      </div>
-      <a-row :gutter="24">
-        <a-col v-for="item in topNews" :key="item.id" :xs="24" :md="12" :xl="8">
-          <a-card class="news-preview-card" hoverable @click="goNews(item.id)">
-            <div class="news-title">
-              <h3>{{ item.title }}</h3>
-              <a-tag v-if="item.isTop === 1" color="processing">置顶</a-tag>
-            </div>
-            <p class="news-summary">{{ item.summary || '点击查看详细内容。' }}</p>
-            <div class="news-meta">
-              {{ item.publishedAt ? dayjs(item.publishedAt).format('YYYY-MM-DD HH:mm') : '未发布' }}
-            </div>
-          </a-card>
-        </a-col>
-      </a-row>
-    </section>
-
     <a-spin :spinning="loading">
       <a-row :gutter="24">
         <a-col v-for="car in carList" :key="car.id" :xs="24" :sm="12" :lg="8">
@@ -344,7 +314,10 @@ onMounted(async () => {
             <template #cover>
               <div class="card-cover">
                 <img
-                  :src="car.coverImage || 'https://cdn.jsdelivr.net/gh/napthedev/placeholder/car-rental.png'"
+                  :src="
+                    car.coverImage ||
+                    'https://cdn.jsdelivr.net/gh/napthedev/placeholder/car-rental.png'
+                  "
                   alt="car"
                 />
               </div>
@@ -359,7 +332,9 @@ onMounted(async () => {
                   </div>
                   <div class="meta-row">
                     <span><strong>座位：</strong>{{ car.seatCount ?? '—' }} 座</span>
-                    <span><strong>变速：</strong>{{ car.gearboxType === 1 ? '手动' : '自动' }}</span>
+                    <span
+                      ><strong>变速：</strong>{{ car.gearboxType === 1 ? '手动' : '自动' }}</span
+                    >
                   </div>
                   <div v-if="car.cityName" class="meta-row">
                     <a-tag color="processing">{{ car.cityName }}</a-tag>
@@ -421,7 +396,8 @@ onMounted(async () => {
 
 .hero-graphic {
   min-height: 200px;
-  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.4), transparent 60%),
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.4), transparent 60%),
     radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.35), transparent 55%),
     radial-gradient(circle at 50% 80%, rgba(255, 255, 255, 0.25), transparent 65%);
   border-radius: 12px;
@@ -505,7 +481,9 @@ onMounted(async () => {
 
 .car-card {
   border-radius: 16px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   overflow: hidden;
 }
 

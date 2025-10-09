@@ -3,6 +3,9 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import type { Dayjs } from 'dayjs'
 import dayjs from 'dayjs'
 import { message, Modal, type FormInstance, type TableProps } from 'ant-design-vue'
+import type { UploadRequestOption as RcCustomRequestOption } from 'ant-design-vue/es/vc-upload/interface'
+import { UploadOutlined } from '@ant-design/icons-vue'
+import { resolveFileUrl } from '@/utils/file'
 import { newsApi, type NewsVO } from '@/api/news'
 
 const dataSource = ref<NewsVO[]>([])
@@ -260,6 +263,34 @@ const handleBatchDelete = () => {
   })
 }
 
+const handleUploadCover = async (options: RcCustomRequestOption) => {
+  const { file, onSuccess, onError } = options
+  try {
+    const rawFile = (file as File & { originFileObj?: File }).originFileObj ?? (file as File)
+    if (!(rawFile instanceof File)) {
+      throw new Error('文件格式不正确')
+    }
+    const response = await newsApi.uploadCover(rawFile)
+    if (response.code === 200 && response.data?.url) {
+      formState.coverImage = response.data.url
+      message.success('封面上传成功')
+      onSuccess?.(response as unknown as Record<string, unknown>)
+      return
+    }
+    const error = new Error(response.message || '封面上传失败')
+    message.error(error.message)
+    onError?.(error)
+  } catch (error) {
+    console.error('封面上传失败:', error)
+    message.error('封面上传失败')
+    onError?.(error as Error)
+  }
+}
+
+const handleRemoveCover = () => {
+  formState.coverImage = ''
+}
+
 const handleSubmit = async () => {
   const form = formRef.value
   if (!form) {
@@ -433,7 +464,33 @@ onMounted(() => {
           <a-textarea v-model:value="formState.summary" :rows="3" placeholder="请输入摘要，可选" />
         </a-form-item>
         <a-form-item label="封面图">
-          <a-input v-model:value="formState.coverImage" placeholder="请输入封面图地址" />
+          <div class="cover-upload">
+            <div class="cover-upload__actions">
+              <a-upload
+                :show-upload-list="false"
+                :custom-request="handleUploadCover"
+                accept="image/*"
+              >
+                <a-button>
+                  <upload-outlined />
+                  选择图片
+                </a-button>
+              </a-upload>
+              <a-button v-if="formState.coverImage" type="link" danger @click="handleRemoveCover">
+                移除
+              </a-button>
+            </div>
+            <a-image
+              v-if="formState.coverImage"
+              :src="resolveFileUrl(formState.coverImage)"
+              :preview="false"
+              width="96"
+              height="72"
+              fallback="https://via.placeholder.com/96x72?text=NEWS"
+              class="cover-upload__preview"
+            />
+            <span v-else class="cover-upload__placeholder">暂未上传封面</span>
+          </div>
         </a-form-item>
         <a-form-item label="正文" name="content">
           <a-textarea v-model:value="formState.content" :rows="8" placeholder="请输入新闻内容" />
@@ -483,5 +540,26 @@ onMounted(() => {
   margin-bottom: 16px;
   display: flex;
   justify-content: space-between;
+}
+
+.cover-upload {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cover-upload__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cover-upload__preview {
+  border: 1px solid #f0f0f0;
+  border-radius: 4px;
+}
+
+.cover-upload__placeholder {
+  color: #999;
 }
 </style>

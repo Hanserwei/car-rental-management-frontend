@@ -104,5 +104,15 @@ export const newsApi = {
       headers: { 'Content-Type': 'application/json' },
       data: payload,
     }),
-}
 
+  uploadCover: (file: File) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    return request<{ bucket?: string; objectKey?: string; url?: string }>({
+      url: '/content/news/cover/upload',
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+    })
+  },
+}
